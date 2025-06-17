@@ -17,7 +17,7 @@ function Biodata() {
     // Check if the user is authenticated when the component mounts
     if (!isAuthenticated()) {
       // If not authenticated, redirect to the sign-in page
-      message.error("Kamu belum login. Silahkan login terlebir dahulu!");
+      message.error("Kamu belum login. Silahkan login terlebih dahulu!");
       navigate("/");
     }
   }, [navigate]);

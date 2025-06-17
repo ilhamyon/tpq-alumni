@@ -8,22 +8,48 @@ import moment from "moment";
 
 const columns = [
   {
-    title: 'Relawan',
+    title: 'Admin',
     dataIndex: 'name',
     key: 'name',
     render: (text) => <a className='text-green-600 font-semibold'>{text}</a>,
   },
   {
+    title: 'Nama',
+    dataIndex: 'nama',
+    key: 'nama',
+  },
+  {
+    title: 'Tahun Lulus',
+    dataIndex: 'tahunLulus',
+    key: 'tahunLulus',
+  },
+    {
     title: 'Lokasi',
     dataIndex: 'lokasi',
     key: 'lokasi',
     render: (item, record) => (
       <div>
-        {record.alamat}, {record.village}, {record.district}, {record.regency}
+        {record.village}, {record.district}, {record.regency}
       </div>
     )
   },
   {
+    title: 'Telepon',
+    dataIndex: 'telepon',
+    key: 'telepon',
+  },
+  {
+    title: 'Jumlah Murid',
+    dataIndex: 'jumlahMurid',
+    key: 'jumlahMurid',
+  },
+  {
+    title: 'Foto',
+    dataIndex: 'foto',
+    key: 'foto',
+    render: (text) => <a href={text} target="_blank" className='text-green-600 font-semibold'>Download Foto</a>,
+  },
+    {
     title: 'Waktu',
     dataIndex: 'waktu',
     key: 'waktu',
@@ -32,32 +58,6 @@ const columns = [
         {moment(record.date).subtract(10, 'days').calendar()}
       </div>
     )
-  },
-  {
-    title: 'Nama',
-    dataIndex: 'nama',
-    key: 'nama',
-  },
-  {
-    title: 'Rekomendasi',
-    dataIndex: 'rekomendasi',
-    key: 'rekomendasi',
-  },
-  {
-    title: 'Organisasi',
-    dataIndex: 'organisasi',
-    key: 'organisasi',
-  },
-  {
-    title: 'Jenis Bantuan',
-    dataIndex: 'jenisBantuan',
-    key: 'jenisBantuan',
-  },
-  {
-    title: 'Foto',
-    dataIndex: 'foto',
-    key: 'foto',
-    render: (text) => <a href={text} target="_blank" className='text-green-600 font-semibold'>Download Foto</a>,
   },
 ];
 
@@ -69,7 +69,7 @@ function Home() {
     // Check if the user is authenticated when the component mounts
     if (!isAuthenticated()) {
       // If not authenticated, redirect to the sign-in page
-      message.error("Kamu belum login. Silahkan login terlebir dahulu!");
+      message.error("Kamu belum login. Silahkan login terlebih dahulu!");
       navigate("/");
     }
   }, [navigate]);
@@ -98,7 +98,7 @@ function Home() {
       try {
         setIsLoading(true);
         const sanityData = await sanityClient.fetch(`*[_type == 'tpq-entry']{
-          _id, nama, date, province, regency, district, village, alamat, rekomendasi, organisasi, jenisBantuan, fotoEksternal, "foto": foto.asset->url, geometry, user-> {name}
+          _id, nama, date, province, regency, district, village, tahunLulus, telepon, jumlahMurid, fotoEksternal, "foto": foto.asset->url, geometry, user-> {name}
         }`);
 
         setServerData({
@@ -119,7 +119,7 @@ function Home() {
 
     fetchSanityData();
   }, []);
-  console.log('cek data pemasangan: ', serverData)
+  // console.log('cek data pemasangan: ', serverData)
 
   const [dataSource, setDataSource] = useState([]);
   // eslint-disable-next-line no-unused-vars
@@ -159,10 +159,9 @@ function Home() {
         name: item.user.name || "-",
         nama: item.nama || "-",
         date: item.date || "-",
-        rekomendasi: item.rekomendasi || "-",
-        organisasi: item.organisasi || "-",
-        jenisBantuan: item.jenisBantuan || "-",
-        alamat: item.alamat || "-",
+        tahunLulus: item.tahunLulus || "-",
+        telepon: item.telepon || "-",
+        jumlahMurid: item.jumlahMurid || "-",
         foto: item.fotoEksternal || "-",
         village: getNameById(item.village, villages),
         district: getNameById(item.district, districts),
@@ -231,14 +230,14 @@ function Home() {
     const rearrangedData = dataSource.map((item, index) => {
       return {
         'No.': index + 1,
-        'Nama Relawan': item.name,
-        'Waktu': `${moment(item.date).subtract(10, 'days').calendar()}`,
-        'Lokasi': `${item.alamat}, ${item.village}, ${item.district}, ${item.regency}`,
+        // 'Nama Relawan': item.name,
         'Nama': item.nama,
-        'Rekomendasi': item.rekomendasi,
-        'Organisasi': item.organisasi,
-        'Jenis Bantuan': item.jenisBantuan,
-        'Foto': item.foto
+        'Tahun Lulus': item.nama,
+        'Lokasi': `${item.alamat}, ${item.village}, ${item.district}, ${item.regency}`,
+        'Telepon': item.telepon,
+        'Jumlah Murid': item.jumlahMurid,
+        'Foto': item.foto,
+        'Waktu': `${moment(item.date).subtract(10, 'days').calendar()}`,
       };
     });
   
@@ -247,11 +246,11 @@ function Home() {
 
   const downloadExcel = () => {
     const data = rearrangeDataForExcel(serverData.data);
-    const volunteerName = data[0]?.['Nama Relawan'];
+    // const volunteerName = data[0]?.['Nama Relawan'];
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    XLSX.writeFile(workbook, `tpq-entry-${volunteerName}.xlsx`);
+    XLSX.writeFile(workbook, `Data-Sebaran-TPQ-Alumni-Muhajirin.xlsx`);
   };
 
   // const updatedColumns = columns.map((col) => ({
