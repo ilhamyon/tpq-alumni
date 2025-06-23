@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { deauthUser, isAuthenticated } from "../utils/auth";
 import { Button, DatePicker, Dropdown, Form, Input, Menu, message, Select } from "antd";
-// import imageIqbalIndahCenter from "../assets/rohmi.jpg"
+import bgHero from "../assets/bg-tpq.jpg"
 // import { sanityClient } from "../lib/sanity/getClient";
 // import { InboxOutlined } from '@ant-design/icons';
 import axios from "axios";
@@ -14,6 +14,7 @@ import 'antd/dist/reset.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import moment from "moment";
 
 // Memperbaiki ikon marker
 delete L.Icon.Default.prototype._getIconUrl;
@@ -103,7 +104,7 @@ function Home() {
               create: {
                 _type: 'tpq-entry',
                 nama: values.nama,
-                date: values.date,
+                date: moment(),
                 province: values.province,
                 regency: values.regency,
                 district: values.district,
@@ -275,7 +276,7 @@ function Home() {
           </Dropdown>
         </div>
       </div>
-      <section id="hero" className="relative bg-[url(https://scontent.fdps5-1.fna.fbcdn.net/v/t39.30808-6/476165562_1146840823736970_894567502908051068_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeG4GRZU5FcZyulqlEck5-hJAF_aQvyTmFAAX9pC_JOYUHdpJaqXulNMGhxamj4Y5_TeSsdYpt-SUybMSLLB-Ycv&_nc_ohc=ihyh-To5l_UQ7kNvwFg542N&_nc_oc=AdlMyaTaEgb4F1n_xwqYh4vVJpCC5PjTlBNwoHGtghH9Gfa-QOt_X4E_0KkZheOFi0w&_nc_zt=23&_nc_ht=scontent.fdps5-1.fna&_nc_gid=qHwLs-Y6_7-5CUu5fde-_w&oh=00_AfPMe_QxyxiiNHIXihahG8xYuQjtGH2cslv_YfgXSzGsmg&oe=6856D036)] bg-cover bg-center bg-no-repeat">
+      <section id="hero" className={`relative bg-[url("${bgHero}")] bg-cover bg-center bg-no-repeat`} style={{ backgroundImage: `url(${bgHero})` }}>
         <div style={gradientStyle}></div>
 
         <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
@@ -379,6 +380,7 @@ function Home() {
               label="Waktu"
               name="date"
               rules={[{ required: true, message: 'Waktu harus diisi' }]}
+              hidden
             >
               <DatePicker className="w-full" />
             </Form.Item>
